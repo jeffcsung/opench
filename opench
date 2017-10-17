@@ -1,0 +1,28 @@
+#!/bin/bash
+
+EDITOR=code
+
+if [ $# -gt 0 ]; then
+	sha=$1
+else
+	sha=""
+fi
+
+prefix="git log --stat=1000 --stat-name-width=1000 --stat -n1 $sha"
+
+x=1
+numLines=`$prefix | wc -l`
+numChg=`$prefix | tail -1 | awk '{print \$1}'`
+args=""
+while [ $x -le $numLines ];
+do
+	line=`$prefix | head -$x | tail -1 | awk '{print $1}'`
+
+	if [ $x -ge $((numLines-numChg)) ] && [ $x -lt $numLines ]; then
+		args="$args $line"
+	fi
+
+	x=$((x+1))
+done
+
+$EDITOR $args
