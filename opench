@@ -8,6 +8,8 @@ else
 	sha=""
 fi
 
+repoRoot=`git rev-parse --show-toplevel`
+
 prefix="git log --stat=1000 --stat-name-width=1000 --stat -n1 $sha"
 
 x=1
@@ -19,7 +21,7 @@ do
 	line=`$prefix | head -$x | tail -1 | awk '{print $1}'`
 
 	if [ $x -ge $((numLines-numChg)) ] && [ $x -lt $numLines ]; then
-		args="$args $line"
+		args="$args $repoRoot/$line"
 	fi
 
 	x=$((x+1))
